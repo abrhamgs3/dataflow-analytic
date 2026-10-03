@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: fct_permit_lifecycle
+    description: "Fact table tracking permit stage transitions and duration analysis. Materialized as incremental for performance. Partitioned by stage_entered_date and clustered by permit_id and current_status."
+
+    config:
+      materialized: incremental
+      unique_key: stage_event_id
+      partition_by:
+        field: stage_entered_date
+        data_type: date
+        granularity: day
+      cluster_by:
+        - permit_id
+        - current_status
+
+    columns:
+      - name: stage_event_id
+        description: "Unique identifier for each stage transition event. Primary key."
+        tests:
+          - unique
+          - not_null
+
+      - name: permit_id
+        description: "Foreign key reference to the permit application."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_salesforce__permit_applications')
+              field: permit_id
+
+      - name: current_status
+        description: "Status of the permit at this stage event. Examples: Submitted, Under Review, Issued, Rejected, On Hold."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Submitted', 'Under Review', 'Approved', 'Issued', 'Rejected', 'On Hold', 'Cancelled']
+
+      - name: stage_entered_at
+        description: "Timestamp when the permit entered this status. UTC timezone."
+        tests:
+          - not_null
+
+      - name: stage_entered_date
+        description: "Date the permit entered this status. Used as partition key for query optimization."
+        tests:
+          - not_null
+
+      - name: next_stage_entered_at
+        description: "Timestamp when the permit transitioned to the next status. NULL if this is the current/final status."
+
+      - name: hours_in_stage
+        description: "Duration in hours spent in this status before transitioning to the next stage. NULL if permit is in current status."

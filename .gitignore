@@ -1,0 +1,57 @@
+# dbt artifacts
+target/
+dbt_modules/
+logs/
+.dbt/
+dbt_packages/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Environment & Secrets
+.env
+.env.local
+.env.prod
+profiles.yml
+~/.dbt/profiles.yml
+credentials.json
+
+# Documentation build files
+site/
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+*.egg
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*~
+
+# IDE cache
+.cache/
+.pytest_cache/
+.coverage
+
+# Example files (not source of truth)
+profiles.yml.example

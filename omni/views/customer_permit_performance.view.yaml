@@ -1,0 +1,85 @@
+version: 1
+view: customer_permit_performance
+label: "Customer Permit Performance"
+description: "Analytics view providing customer-level permit metrics including submission volume, approval rates, processing efficiency, and project valuations."
+sql: |
+  select * from {{ ref('int_customer_permit_performance') }}
+
+fields:
+  # ===== DIMENSIONS (Categorical attributes for filtering/grouping) =====
+
+  - dimension: account_id
+    type: string
+    primary_key: true
+    sql: ${table}.account_id
+    label: "Account ID"
+    description: "Unique account identifier. Use for drilling into specific customer details."
+
+  - dimension: account_name
+    type: string
+    sql: ${table}.account_name
+    label: "Account Name"
+    description: "Customer organization name."
+
+  - dimension: account_type
+    type: string
+    sql: ${table}.account_type
+    label: "Account Type"
+    description: "Account classification (Customer, Prospect, Partner). Use to segment performance by customer tier."
+    suggest_dimension: account_type
+
+  # ===== MEASURES (Numerical aggregations) =====
+
+  - measure: total_permits_submitted
+    type: sum
+    sql: ${table}.total_permits_submitted
+    label: "Total Permits Submitted"
+    description: "Total number of permit applications submitted by account. Indicates engagement volume and project pipeline."
+    value_format_name: decimal_0
+    drill_fields: [account_id, account_name]
+
+  - measure: total_permits_issued
+    type: sum
+    sql: ${table}.total_permits_issued
+    label: "Total Permits Issued"
+    description: "Total permits successfully approved and issued by account. Lower values may indicate processing issues or rejections."
+    value_format_name: decimal_0
+    drill_fields: [account_id, account_name]
+
+  - measure: permit_approval_rate
+    type: number
+    sql: safe_divide(${total_permits_issued}, ${total_permits_submitted})
+    label: "Permit Approval Rate"
+    description: "Percentage of submitted permits that were successfully issued. Target: >85%."
+    value_format_name: percent_2
+    drill_fields: [account_id, account_name]
+
+  - measure: avg_turnaround_days
+    type: average
+    sql: ${table}.avg_turnaround_days
+    label: "Average Turnaround (Days)"
+    description: "Average days from permit submission to issuance. Lower is better. Benchmark: 30-45 days."
+    value_format_name: decimal_1
+    drill_fields: [account_id, account_name]
+
+  - measure: total_project_capex
+    type: sum
+    sql: ${table}.total_project_capex
+    label: "Total Project CapEx"
+    description: "Sum of project valuations tied to permits. Represents customer project value and revenue opportunity."
+    value_format_name: usd_0
+    drill_fields: [account_id, account_name]
+
+  - measure: avg_project_value
+    type: number
+    sql: safe_divide(${total_project_capex}, ${total_permits_submitted})
+    label: "Average Project Value"
+    description: "Average project value per submitted permit."
+    value_format_name: usd_0
+    drill_fields: [account_id, account_name]
+
+  - measure: count_accounts
+    type: count_distinct
+    sql: ${account_id}
+    label: "Number of Accounts"
+    description: "Distinct number of accounts in result set."

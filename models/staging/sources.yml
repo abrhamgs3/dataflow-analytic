@@ -1,0 +1,129 @@
+version: 2
+
+sources:
+  - name: salesforce
+    description: Raw data extracted from Salesforce via API
+    database: raw
+    schema: salesforce
+    freshness:
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
+    loaded_at_field: _fct_synced
+
+    tables:
+      - name: accounts
+        description: Salesforce Account objects representing customer organizations
+        columns:
+          - name: id
+            description: Unique account identifier
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: Account name
+            tests:
+              - not_null
+          - name: type
+            description: Account type (e.g., Customer, Prospect, Partner)
+          - name: industry
+            description: Industry classification
+          - name: annual_revenue
+            description: Annual revenue in USD
+          - name: employee_count
+            description: Number of employees
+          - name: billing_street
+          - name: billing_city
+          - name: billing_state
+          - name: billing_postal_code
+          - name: billing_country
+          - name: phone
+          - name: website
+          - name: created_date
+            description: Record creation timestamp
+          - name: last_modified_date
+            description: Last modification timestamp
+          - name: _fct_synced
+            description: Data warehouse sync timestamp
+
+      - name: opportunities
+        description: Salesforce Opportunity objects representing potential permit projects
+        columns:
+          - name: id
+            description: Unique opportunity identifier
+            tests:
+              - unique
+              - not_null
+          - name: account_id
+            description: Foreign key to Account
+            tests:
+              - not_null
+          - name: name
+            description: Opportunity name
+          - name: stage_name
+            description: Sales stage (Pipeline, Proposal, Negotiation, Closed Won, Closed Lost)
+          - name: close_date
+            description: Expected or actual close date
+          - name: amount
+            description: Opportunity amount/project valuation in USD
+          - name: probability_percent
+            description: Win probability percentage (0-100)
+          - name: forecast_category
+            description: Forecast category for revenue forecasting
+          - name: type
+            description: Opportunity type
+          - name: created_date
+          - name: last_modified_date
+          - name: _fct_synced
+
+      - name: permit_applications
+        description: Salesforce Permit Applications representing submitted permits
+        columns:
+          - name: id
+            description: Unique permit identifier
+            tests:
+              - unique
+              - not_null
+          - name: opportunity_id
+            description: Foreign key to Opportunity
+            tests:
+              - not_null
+          - name: status
+            description: Permit status (Submitted, Under Review, Issued, Rejected)
+            tests:
+              - not_null
+          - name: submitted_date
+            description: Date permit was submitted
+          - name: issued_date
+            description: Date permit was issued (if approved)
+          - name: created_date
+          - name: last_modified_date
+          - name: _fct_synced
+
+      - name: permit_stages
+        description: Audit log of permit stage transitions tracking lifecycle progression
+        columns:
+          - name: id
+            description: Unique stage event identifier
+            tests:
+              - unique
+              - not_null
+          - name: permit_id
+            description: Foreign key to Permit Application
+            tests:
+              - not_null
+          - name: status
+            description: Status at this stage
+            tests:
+              - not_null
+          - name: stage_entered_at
+            description: Timestamp when permit entered this status
+            tests:
+              - not_null
+          - name: entered_by_user_id
+            description: User ID who created the stage transition
+          - name: notes
+            description: Notes about the stage transition
+          - name: created_at
+            description: Record creation timestamp
+          - name: _fct_synced
+            description: Data warehouse sync timestamp

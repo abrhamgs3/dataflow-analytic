@@ -1,0 +1,83 @@
+name: dbt PR Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "models/**"
+      - "macros/**"
+      - "dbt_project.yml"
+      - "packages.yml"
+
+jobs:
+  dbt-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: |
+          pip install --upgrade pip
+          pip install dbt-snowflake
+
+      - name: Create dbt profiles directory
+        run: mkdir -p ~/.dbt
+
+      - name: Create profiles.yml for dev
+        run: |
+          cat > ~/.dbt/profiles.yml << EOF
+          salesforce:
+            target: dev
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.DBT_ACCOUNT }}
+                user: ${{ secrets.DBT_USER }}
+                password: ${{ secrets.DBT_PASSWORD }}
+                role: ${{ secrets.DBT_ROLE }}
+                database: ${{ secrets.DBT_DATABASE }}
+                schema: pr_${{ github.event.number }}
+                warehouse: ${{ secrets.DBT_WAREHOUSE }}
+                threads: 4
+          EOF
+
+      - name: dbt debug
+        run: dbt debug
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt parse
+        run: dbt parse
+
+      - name: dbt run
+        run: dbt run
+
+      - name: dbt test
+        run: dbt test
+
+      - name: Comment PR with results
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const status = '${{ job.status }}';
+            const emoji = status === 'success' ? '✅' : '❌';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${emoji} dbt PR checks ${status.toUpperCase()}\n\nFull logs available in [GitHub Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`
+            });

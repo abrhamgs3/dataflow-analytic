@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: int_customer_permit_performance
+    description: |
+      Customer-level aggregation of permit metrics. Joins accounts with opportunities and permits
+      to calculate KPIs including submission rates, issuance rates, average turnaround, and project valuations.
+      Used as the foundation for customer permit performance BI views.
+
+    config:
+      materialized: table
+
+    columns:
+      - name: account_id
+        description: Unique account identifier. Foreign key to Salesforce Accounts.
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_salesforce__accounts')
+              field: id
+
+      - name: account_name
+        description: Name of the customer account.
+        tests:
+          - not_null
+
+      - name: account_type
+        description: Classification of the account (e.g., Customer, Prospect, Partner).
+
+      - name: total_permits_submitted
+        description: Total number of permit applications submitted by this account. Measures volume of engagement.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
+
+      - name: total_permits_issued
+        description: Total number of permits successfully issued for this account. Indicates approval rate context.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
+          - dbt_utils.expression_is_true:
+              expression: "<=total_permits_submitted"
+
+      - name: avg_turnaround_days
+        description: |
+          Average number of days from permit submission to issuance. Only includes issued permits.
+          NULL or very low values indicate efficient processing. High values may indicate bottlenecks.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
+
+      - name: total_project_capex
+        description: |
+          Sum of project valuations (opportunity amounts) tied to all permits for this account.
+          Represents total project capital expenditure exposure. Used for revenue and pipeline analysis.
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">=0"
