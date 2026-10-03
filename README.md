@@ -254,4 +254,4 @@ Created as part of the SQL-Permit analytics initiative.
 ---
 
 **Last Updated**: 2026-10-03  
-**Status**: Production Ready
+**Status**: Portfolio / Practice Project (demonstration of dbt + analytics best practices)

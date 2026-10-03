@@ -292,5 +292,6 @@ order by avg_hours desc
 ---
 
 **Last Updated:** 2026-10-03  
-**Maintained By:** Analytics Team  
-**Questions?** Refer to README.md or contact data@company.com
+**Project Type:** Practice / Portfolio Project  
+**Data:** Synthetic/example data (not production)  
+**Questions?** Refer to README.md or SETUP.md

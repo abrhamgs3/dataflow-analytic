@@ -1,5 +1,6 @@
 
-# Name your project! Project names should be lowercase and use underscores as separators
+# SQL-Permit: Practice dbt analytics project demonstrating best practices
+# Uses synthetic data - not connected to live Salesforce
 name: 'sql_permit'
 version: '1.0.0'
 config-version: 2

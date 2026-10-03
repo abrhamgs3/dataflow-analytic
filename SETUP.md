@@ -237,4 +237,5 @@ dbt docs serve
 ---
 
 **Setup Last Updated:** 2026-10-03  
-**dbt Version Tested:** 1.5.0+
+**dbt Version Tested:** 1.5.0+  
+**Project Type:** Practice / Portfolio Project (uses synthetic data)

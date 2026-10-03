@@ -347,8 +347,8 @@ dbt test --fail-fast  # Stop on first failure
 
 ---
 
-**Project Status:** ✅ Production Ready  
+**Project Status:** Portfolio / Practice Project  
 **Last Updated:** 2026-10-03  
 **Version:** 1.0.0
 
-**Summary:** The SQL-Permit project is now a professional-grade dbt analytics solution with complete documentation, automated CI/CD, comprehensive testing, and business intelligence integration. Ready for team deployment.
+**Summary:** The SQL-Permit project is a professional-grade dbt analytics solution demonstrating best practices in data transformation, documentation, CI/CD automation, and business intelligence integration. Built as a practice project to showcase analytics engineering skills and dbt expertise. Uses synthetic data in a local/dev environment—not connected to live Salesforce.
