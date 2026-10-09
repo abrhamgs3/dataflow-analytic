@@ -8,11 +8,6 @@ name: dbt Validate & Parse
 on:
   push:
     branches: [main, develop]
-    paths:
-      - "models/**"
-      - "macros/**"
-      - "dbt_project.yml"
-      - "packages.yml"
   pull_request:
     branches: [main]
   workflow_dispatch:
