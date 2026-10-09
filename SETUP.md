@@ -227,15 +227,61 @@ dbt docs serve
 4. ✅ Add additional marts/views as business requirements evolve
 5. ✅ Configure dbt tests for ongoing data quality monitoring
 
+## GitHub Actions Workflows
+
+### Included Workflows
+
+**1. dbt Validate & Parse** (`.github/workflows/dbt_run.yml`)
+- Runs on: push to main/develop, pull requests, manual trigger
+- What it does: Validates dbt syntax and parses models
+- No secrets required ✅
+- Runs automatically on code changes
+
+**2. dbt PR Validation** (`.github/workflows/dbt_pr.yml`)
+- Runs on: pull requests
+- What it does: Validates syntax + comments on PR
+- No secrets required ✅
+
+**3. Full dbt Run with Warehouse** (in dbt_run.yml)
+- Runs on: Manual trigger (workflow_dispatch) IF secrets are configured
+- What it does: Full dbt run, test, and documentation generation
+- Requires GitHub Secrets to be configured
+- Only activates if you add warehouse credentials
+
+### Using Workflows
+
+**To validate code changes (automatic):**
+- Push code to GitHub
+- Workflows run automatically ✅
+
+**To run full pipeline against warehouse (manual):**
+1. Add GitHub Secrets in Settings → Secrets and variables → Actions:
+   - `DBT_ACCOUNT`, `DBT_USER`, `DBT_PASSWORD`, `DBT_ROLE`, `DBT_DATABASE`, `DBT_WAREHOUSE`
+2. Go to Actions tab → dbt Validate & Parse → Run workflow
+3. Workflow will detect secrets and run full pipeline
+
 ## Support & Troubleshooting
 
+### Local Development
 - Review logs: `dbt run --debug`
 - Check dbt docs: https://docs.getdbt.com/
 - Validate SQL: Run models manually against warehouse
 - Review source data for quality issues
 
+### GitHub Actions Issues
+
+**"dbt-run failed in 3 seconds"**
+- This happens if secrets aren't configured
+- No action needed—validation workflow still runs
+- Workflows only validate syntax (no warehouse needed)
+
+**To enable full runs with warehouse:**
+- Configure GitHub Secrets with your Snowflake/BigQuery/Postgres credentials
+- See GITHUB_SETUP.md for instructions
+
 ---
 
-**Setup Last Updated:** 2026-10-03  
+**Setup Last Updated:** 2026-10-09  
 **dbt Version Tested:** 1.5.0+  
-**Project Type:** Practice / Portfolio Project (uses synthetic data)
+**Project Type:** Practice / Portfolio Project (uses synthetic data)  
+**Workflows:** Syntax validation automatic, full pipeline requires manual setup
