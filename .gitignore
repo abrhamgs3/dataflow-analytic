@@ -1,57 +1,154 @@
-# dbt artifacts
-target/
-dbt_modules/
-logs/
-.dbt/
-dbt_packages/
+################################################################################
+# ESSENTIAL PROJECT FILES ONLY
+#
+# What IS tracked: SQL models, YAML configs, documentation, workflows
+# What is NOT tracked: Artifacts, secrets, IDE files, comments, reviews
+################################################################################
 
-# IDE
-.vscode/
-.idea/
-*.swp
+# ============================================================================
+# dbt BUILD ARTIFACTS (Generated, not source)
+# ============================================================================
+target/                          # Compiled SQL output
+dbt_modules/                      # External package dependencies
+dbt_packages/                     # Cached packages
+logs/                             # dbt run/test logs
+.dbt/                            # dbt internal files
+*.dbt/
+run_results.json                 # dbt run metadata
+manifest.json                    # dbt compiled manifest
+compiled/                        # Compiled models
+execute/                         # Executed queries
+
+# ============================================================================
+# IDE & EDITOR (Developer-specific, not project)
+# ============================================================================
+.vscode/                         # VS Code workspace settings
+.idea/                           # JetBrains IDE config
+*.swp                            # Vim swap files
 *.swo
-*~
-.DS_Store
-*.sublime-project
+*~                               # Backup files
+.DS_Store                        # macOS metadata
+.AppleDouble
+.LSOverride
+Thumbs.db                        # Windows thumbnail cache
+desktop.ini                      # Windows folder config
+*.sublime-project                # Sublime Text project files
 *.sublime-workspace
+.vscode-settings.json
+launch.json
+*.code-workspace
 
-# Environment & Secrets
-.env
+# ============================================================================
+# SECRETS & CREDENTIALS (NEVER COMMIT)
+# ============================================================================
+.env                             # Environment variables
 .env.local
 .env.prod
-profiles.yml
+.env.*.local
+profiles.yml                     # dbt credentials (CRITICAL: Never commit!)
 ~/.dbt/profiles.yml
-credentials.json
+credentials.json                 # Cloud credentials
+*.pem                            # Private keys
+*.key
+*.pfx
+.aws/                           # AWS credentials
+.gcp/                           # GCP credentials
+service-account.json            # GCP service accounts
 
-# Documentation build files
-site/
+# ============================================================================
+# DEVELOPMENT & TESTING ARTIFACTS
+# ============================================================================
+.pytest_cache/                   # Pytest cache
+.coverage                        # Coverage reports
+htmlcov/                         # HTML coverage reports
+.tox/                           # Tox test environments
+test_results/
+test_output/
 
-# OS
-Thumbs.db
-.DS_Store
-desktop.ini
+# ============================================================================
+# COMMENTARY, REVIEWS, SCRATCH (Not source)
+# ============================================================================
+*.todo                           # Todo files
+*.review                         # Code review notes
+*.comment                        # Comments/annotations
+NOTES.md                         # Scratch notes
+SCRATCH.md
+TODO.md
+REVIEW.md
+FEEDBACK.md
+*.draft
+*.wip                            # Work in progress
+scratch/                         # Scratch directory
+temp/                           # Temporary work
+_review/                        # Review artifacts
+_scratch/
+.review/
 
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
+# ============================================================================
+# PYTHON CACHE & VIRTUAL ENVIRONMENTS
+# ============================================================================
+__pycache__/                     # Python cache
+*.py[cod]                        # Python compiled files
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/                      # Package metadata
+dist/                            # Distribution packages
+build/                           # Build directory
+*.egg                            # Python eggs
+.venv/                           # Virtual environment
 venv/
 env/
-*.egg
-dist/
-build/
+ENV/
+.env_venv
 
-# Temporary files
+# ============================================================================
+# TEMPORARY & CACHE FILES
+# ============================================================================
 *.tmp
 *.temp
 *.bak
-*~
-
-# IDE cache
+*.cache
 .cache/
-.pytest_cache/
-.coverage
+*.log
+*.swp
+.temp/
+.tmp/
 
-# Example files (not source of truth)
-profiles.yml.example
+# ============================================================================
+# NODE & NPM (if using dbt Cloud or web components)
+# ============================================================================
+node_modules/
+package-lock.json
+yarn.lock
+npm-debug.log
+
+# ============================================================================
+# DOCKER (for local dev)
+# ============================================================================
+docker-compose.override.yml
+.dockerignore.local
+
+# ============================================================================
+# DATA FILES (unless explicitly tracked)
+# ============================================================================
+data/raw/                        # Raw data (might be large/sensitive)
+data/staging/
+*.csv                            # CSV exports
+*.parquet
+*.xlsx
+*.xls
+
+# ============================================================================
+# GENERATED DOCUMENTATION (not source)
+# ============================================================================
+site/                            # MkDocs generated site
+docs_generated/
+dbt_docs/
+
+# ============================================================================
+# EXAMPLE/TEMPLATE FILES (copy to profiles.yml.example, not tracked)
+# ============================================================================
+# profiles.yml.example is INTENTIONALLY TRACKED as a template
+# But any actual profiles.yml is NEVER committed

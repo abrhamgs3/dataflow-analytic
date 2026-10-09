@@ -1,0 +1,58 @@
+# dbt Profile Configuration Example
+# Copy this file to ~/.dbt/profiles.yml and update with your credentials
+
+salesforce:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: [your-snowflake-account-id]  # e.g., xy12345.us-east-1
+      user: [your-username]
+      password: [your-password]
+      role: [your-role]                      # e.g., analytics_developer
+      database: analytics                    # Warehouse database
+      schema: dev                            # Dev schema
+      warehouse: compute_wh                  # Compute warehouse
+      threads: 4
+      client_session_keep_alive: false
+
+    prod:
+      type: snowflake
+      account: [your-snowflake-account-id]
+      user: [your-service-account-username]
+      password: [your-service-account-password]
+      role: [your-prod-role]                 # e.g., analytics_prod
+      database: analytics
+      schema: prod
+      warehouse: compute_wh
+      threads: 8
+      client_session_keep_alive: false
+
+# Alternative: BigQuery
+# salesforce:
+#   target: dev
+#   outputs:
+#     dev:
+#       type: bigquery
+#       project-id: [your-gcp-project]
+#       dataset-id: [dataset_name]
+#       threads: 4
+#       location: US
+#       priority: interactive
+#       retries: 1
+#       timeout_seconds: 300
+
+# Alternative: PostgreSQL
+# salesforce:
+#   target: dev
+#   outputs:
+#     dev:
+#       type: postgres
+#       host: [hostname]
+#       user: [username]
+#       password: [password]
+#       port: 5432
+#       dbname: analytics
+#       schema: public
+#       threads: 4
+#       keepalives_idle: 0

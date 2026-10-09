@@ -48,12 +48,23 @@ sql_permit/
 │   └── marts/                # Final analytics tables
 │       ├── fct_permit_lifecycle.sql
 │       └── fct_permit_lifecycle.yml
+├── macros/                   # Reusable SQL functions
 ├── omni/
 │   └── views/
 │       └── customer_permit_performance.view.yaml
+├── .github/
+│   └── workflows/            # CI/CD automation
 ├── dbt_project.yml           # dbt project configuration
-└── README.md                 # This file
+├── packages.yml              # dbt dependencies
+├── .gitignore                # Git exclusions (keeps repo clean)
+├── README.md                 # This file
+├── SETUP.md                  # Setup instructions
+├── DATA_DICTIONARY.md        # Complete data reference
+├── GIT_GUIDELINES.md         # What to commit vs. ignore
+└── profiles.yml.example      # Template (never commit real profiles.yml)
 ```
+
+**Note:** See `GIT_GUIDELINES.md` for what files should/shouldn't be in the repository.
 
 ## 📊 Key Models
 
